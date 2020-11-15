@@ -70,7 +70,7 @@
     ansible_python_interpreter: "{{ openstack_db_setup_python_interpreter |
                                  default((galera_db_setup_host == 'localhost') |
                                  ternary(ansible_playbook_python, ansible_python['executable'])) }}"
-  community.mysql.mysql_user:
+  mysql_user:
     name: "{{ galera_mariadb_backups_user }}"
     password: "{{ galera_mariadb_backups_password }}"
     host: "%"
