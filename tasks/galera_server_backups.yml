@@ -64,9 +64,9 @@
   when: galera_mariadb_backups_increment_on_calendar is defined
 
 - name: Grant access to the database for the backup service
-  delegate_to: "{{ openstack_db_setup_host | default('localhost') }}"
+  delegate_to: "{{ groups['galera_all'][0] }}"
   vars:
-    galera_db_setup_host: "{{ openstack_db_setup_host | default('localhost') }}"
+    galera_db_setup_host: "{{ groups['galera_all'][0] }}"
     ansible_python_interpreter: "{{ openstack_db_setup_python_interpreter |
                                  default((galera_db_setup_host == 'localhost') |
                                  ternary(ansible_playbook_python, ansible_python['executable'])) }}"
