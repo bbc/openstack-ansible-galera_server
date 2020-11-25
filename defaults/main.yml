@@ -211,6 +211,7 @@ galera_ssl_server: "{{ (galera_cluster_members | default(['localhost']))[0] }}"
 # copies is the number of full backups to be kept, the corresponding
 # incremental backups will also be kept. Uses systemd timer instead of cron.
 galera_mariadb_backups_enabled: false
+#galera_backups_group_gid: <specify a GID>
 galera_mariadb_backups_path: "/var/backup/mariadb_backups"
 galera_mariadb_backups_full_copies: 2
 galera_mariadb_backups_full_on_calendar: "*-*-* 00:00:00"
