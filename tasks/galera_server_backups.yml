@@ -1,17 +1,12 @@
 ---
-- name: Ensure group backups exists
-  group:
-    name: backups
-    state: present
-    gid: "{{ galera_backups_group_gid | default(omit) }}"
 
 - name: Create mariadb back up directory
   file:
     path: "{{ galera_mariadb_backups_path }}"
     state: "directory"
-    owner: "mysql"
-    group: "backups"
-    mode: "0750"
+    group: "root"
+    owner: "root"
+    mode: "0755"
 
 - name: Template out mariadb backup script
   template:
@@ -31,17 +26,14 @@
   vars:
     systemd_service_enabled: true
     systemd_service_restart_changed: false
-    systemd_user_name: "mysql"
-    systemd_group_name: "backups"
+    systemd_user_name: "root"
+    systemd_group_name: "root"
     systemd_services:
       - service_name: "mariabackup-full"
         execstarts:
           - /usr/bin/python3 {{ galera_mariadb_backups_path }}/mariabackup_script.py {{ galera_mariadb_backups_path }}
             --full-backup --copies={{ galera_mariadb_backups_full_copies }} --suffix={{ galera_mariadb_backups_suffix }}
             --defaults-file={{ galera_mariadb_backups_cnf_file }}
-        environment:
-          UMASK: '0640'
-          UMASK_DIR: '0750'
         timer:
           state: "started"
           options:
@@ -55,17 +47,14 @@
   vars:
     systemd_service_enabled: true
     systemd_service_restart_changed: false
-    systemd_user_name: "mysql"
-    systemd_group_name: "backups"
+    systemd_user_name: "root"
+    systemd_group_name: "root"
     systemd_services:
       - service_name: "mariabackup-increment"
         execstarts:
           - /usr/bin/python3 {{ galera_mariadb_backups_path }}/mariabackup_script.py {{ galera_mariadb_backups_path }}
             --increment --copies={{ galera_mariadb_backups_full_copies }} --suffix={{ galera_mariadb_backups_suffix }}
             --defaults-file={{ galera_mariadb_backups_cnf_file }}
-        environment:
-          UMASK: '0640'
-          UMASK_DIR: '0750'
         timer:
           state: "started"
           options:
